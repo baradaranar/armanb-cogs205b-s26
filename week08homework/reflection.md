@@ -1,0 +1,7 @@
+# Reflection on running the Gemma model to produce the BayesFactor class
+
+We brought an agentic loop to iteratively run Gemma against the test suite that we wrote for a properly-working BayesFactor class. Few interventions were needed, and all of the were related to my errors in setup: 1. preparing the `gemini_simple_api` module import, 2. adjusting the test suite's default `a` and `b` values, and 3. correcting `from bayes_factor import BayesFactor` based on advice given after Assignment 4.
+
+After 3 attempts, Gemma produced an implementation that passed the full test suite. The first two attempts converged on all tests except for the large-'n' overflow from `math.comb(n,k)`. The third attempt provided a remedy using `scipy.special.comb` instead. By default, this returns a float, which means it loses the precision of `math.comb`. For large n, it just returns infinity. The model thus has misleadingly replaced the loud/visible OverflowError with "silenced" NaNs that arise from feeding infinity through `evidence_slab` and `evidence_spike`. 
+
+The final result looks fine at a glance, but has various code smells. The worst is the defensive setup in `bayes_factor` that only makes the IntentionallyFailing test pass, without fixing the core issue. Ironically enough, Gemma has left a comment in the code alluding to the fact that it considered using log-space math. I'd wager it decides against doing so because, as written, my IntentionallyFailing test is too easily "abusable" through its use of assertGreaterEqual...

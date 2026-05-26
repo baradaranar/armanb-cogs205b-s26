@@ -1,0 +1,8 @@
+Implement a class BayesFactor(n, k, a=0.47, b=0.53) in bayes_factor.py.
+- likelihood(theta) returns the binomial likelihood C(n,k) times θ^k times (1-θ)^(n-k).
+- evidence_slab() integrates the likelihood over θ ~ U(0,1).
+- evidence_spike() integrates the likelihood over θ ~ U(a,b), divided by the interval width.
+- bayes_factor() returns the ratio of spike evidence to slab evidence.
+- Use scipy.integrate.quad for numerical integration.
+- Do not modify the test file. 
+- Do not change the constructor signature.
